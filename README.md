@@ -1,0 +1,2 @@
+# uescoin
+A cryptocoin simulator
