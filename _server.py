@@ -88,11 +88,11 @@ class Server_UESCOIN:
                     sockfd, addr = self.server_socket.accept();
                     
                     socket_list.append(sockfd);
-                    
+
                     print("Player (%s, %s) connected" % addr);
                         
 
-    def main_loop(self, match):
+    def main_loop(self, blockchain):
         
         RECV_BUFFER = 1024;
 
@@ -100,7 +100,7 @@ class Server_UESCOIN:
 
     # broadcast messages to all connected clients
     def broadcast (self, server_socket, sock, message):
-        for socket in MATCH:
+        for socket in blockchain:
             # send the message only to peer
             if socket != server_socket and socket != sock :
                 try :
@@ -109,8 +109,8 @@ class Server_UESCOIN:
                     # broken socket connection
                     socket.close();
                     # broken socket, remove it
-                    if socket in MATCH:
-                        MATCH.remove(socket);
+                    if socket in blockchain:
+                        blockchain.remove(socket);
  
 class Tabela_Transacoes:
 	#def __init__(self):
@@ -164,7 +164,7 @@ def main():
 
             # Show credits
             elif(int(choice) == 2):
-                credits = "\nUESCOIN made by:\n\nPrabhat Kumar de Oliveira\nEberty Alves";
+                credits = "\nUESCOIN made by:\n\nPrabhat Kumar de Oliveira\nEberty Alves\n";
                 choice = raw_input(title + credits + welcome_message);
 
             # Exit
@@ -179,7 +179,6 @@ def main():
         # Invalid choice (if not int)
         except Exception as e:
             choice = raw_input("Invalid choice, please enter again (must be int): ");
-            # REMOVER !!!!!!!!!!!!!!!!!!
 
 if __name__ == "__main__":
     os.system('cls' if os.name=='nt' else 'clear');

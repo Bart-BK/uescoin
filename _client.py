@@ -163,7 +163,7 @@ def main():
 
 			# Show Credits
 			elif(int(choice) == 2):
-				credits = "\UESCOIN made by:\n\nPrabhat Kumar de Oliveira\nEberty Alves";
+				credits = "\UESCOIN made by:\n\nPrabhat Kumar de Oliveira\nEberty Alveszn";
 				choice = raw_input(title + credits + welcome_message);
 
 			# Exit
