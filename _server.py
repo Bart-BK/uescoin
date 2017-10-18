@@ -87,6 +87,8 @@ class Server_UESCOIN:
                     # Accept the connection
                     sockfd, addr = self.server_socket.accept();
                     
+                    socket_list.append(sockfd);
+                    
                     print("Player (%s, %s) connected" % addr);
                         
 
