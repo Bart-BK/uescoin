@@ -111,11 +111,14 @@ class Server_UESCOIN:
                         MATCH.remove(socket);
  
 class Tabela_Transacoes:
+	#def __init__(self):
+	
 	def inicia_saldo(self):
-		print("Não implementado ainda");
+		print("Todos iram receber 100 Ucoins");
+		return 100;
 	
 	def verifica_saldo(self):
-		print("Não implementado ainda");
+		print("Nao implementado ainda");
 
  
 def main():

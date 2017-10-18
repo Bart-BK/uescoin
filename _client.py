@@ -118,10 +118,11 @@ class Client_UESCOIN:
 					stdout.flush();
 	
 	def commit(self, tid):
-		print("Não implementado ainda");
+		#data.encode()
+		print("Nao implementado ainda");
 	
 	def transaction(self, tid, timestamp, value, giver, receiver, pkey):
-		print("Não implementado ainda");
+		print("Nao implementado ainda");
 	
 	
 def main():
