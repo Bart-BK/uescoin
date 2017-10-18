@@ -7,6 +7,8 @@ from sys import argv
 # Import random (to select who starts)
 import random
 
+import os
+
 class Server_UESCOIN:
     """This is the server, and the logic of the blockchain"""
 
@@ -45,7 +47,7 @@ class Server_UESCOIN:
             # Try bind
             try:
                 self.server_socket.bind(CONNECTION);
-                self.server_socket.listen(1);
+                self.server_socket.listen(100);
 
                 print("Bind done, waiting for clients...");
                 break;
@@ -108,16 +110,24 @@ class Server_UESCOIN:
                     if socket in MATCH:
                         MATCH.remove(socket);
  
+class Tabela_Transacoes:
+	def inicia_saldo(self):
+		print("Não implementado ainda");
+	
+	def verifica_saldo(self):
+		print("Não implementado ainda");
+
+ 
 def main():
     title = "          _______  _______  _______  _______ _________ _       \n"\
-            "|\     /|(  ____ \(  ____ \(  ____ \(  ___  )\__   __/( (    /|\n"\
-            "| )   ( || (    \/| (    \/| (    \/| (   ) |   ) (   |  \  ( |\n"\
-            "| |   | || (__    | (_____ | |      | |   | |   | |   |   \ | |\n"\
-            "| |   | ||  __)   (_____  )| |      | |   | |   | |   | (\ \) |\n"\
-            "| |   | || (            ) || |      | |   | |   | |   | | \   |\n"\
-            "| (___) || (____/\/\____) || (____/\| (___) |___) (___| )  \  |\n"\
-            "(_______)(_______/\_______)(_______/(_______)\_______/|/    )_)\n"\
-            "                                                               \n\n";
+            " |\     /|(  ____ \(  ____ \(  ____ \(  ___  )\__   __/( (    /|\n"\
+            " | )   ( || (    \/| (    \/| (    \/| (   ) |   ) (   |  \  ( |\n"\
+            " | |   | || (__    | (_____ | |      | |   | |   | |   |   \ | |\n"\
+            " | |   | ||  __)   (_____  )| |      | |   | |   | |   | (\ \) |\n"\
+            " | |   | || (            ) || |      | |   | |   | |   | | \   |\n"\
+            " | (___) || (____/\/\____) || (____/\| (___) |___) (___| )  \  |\n"\
+            " (_______)(_______/\_______)(_______/(_______)\_______/|/    )_)\n"\
+            "                                                                \n\n";
 
     welcome_message =   "(1) Start host for the blockchain simulator\n"\
                         "(2) Credits\n"\
@@ -167,5 +177,5 @@ def main():
             # REMOVER !!!!!!!!!!!!!!!!!!
 
 if __name__ == "__main__":
-
+    os.system('cls' if os.name=='nt' else 'clear');
     main();

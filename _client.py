@@ -16,7 +16,7 @@ class Client_UESCOIN:
 		self.client_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM);
 		# Set timeout connection
 		self.client_socket.settimeout(10);
-
+	
 	def get_HOST_PORT(self):
 		# Case HOST and PORT given by command line
 		if(len(argv) == 3):
@@ -69,7 +69,6 @@ class Client_UESCOIN:
 	def recv(self, sock):
 		# Receive a message from socket
 		return sock.recv(4096);
-
 	
 	def start(self):
 
@@ -117,17 +116,24 @@ class Client_UESCOIN:
 					
 					# Clear buffer
 					stdout.flush();
-
+	
+	def commit(self, tid):
+		print("Não implementado ainda");
+	
+	def transaction(self, tid, timestamp, value, giver, receiver, pkey):
+		print("Não implementado ainda");
+	
+	
 def main():
 	title = "          _______  _______  _______  _______ _________ _       \n"\
-			"|\     /|(  ____ \(  ____ \(  ____ \(  ___  )\__   __/( (    /|\n"\
-			"| )   ( || (    \/| (    \/| (    \/| (   ) |   ) (   |  \  ( |\n"\
-			"| |   | || (__    | (_____ | |      | |   | |   | |   |   \ | |\n"\
-			"| |   | ||  __)   (_____  )| |      | |   | |   | |   | (\ \) |\n"\
-			"| |   | || (            ) || |      | |   | |   | |   | | \   |\n"\
-			"| (___) || (____/\/\____) || (____/\| (___) |___) (___| )  \  |\n"\
-			"(_______)(_______/\_______)(_______/(_______)\_______/|/    )_)\n"\
-			"                                                               \n\n";
+			" |\     /|(  ____ \(  ____ \(  ____ \(  ___  )\__   __/( (    /|\n"\
+			" | )   ( || (    \/| (    \/| (    \/| (   ) |   ) (   |  \  ( |\n"\
+			" | |   | || (__    | (_____ | |      | |   | |   | |   |   \ | |\n"\
+			" | |   | ||  __)   (_____  )| |      | |   | |   | |   | (\ \) |\n"\
+			" | |   | || (            ) || |      | |   | |   | |   | | \   |\n"\
+			" | (___) || (____/\/\____) || (____/\| (___) |___) (___| )  \  |\n"\
+			" (_______)(_______/\_______)(_______/(_______)\_______/|/    )_)\n"\
+			"                                                                \n\n";
 
 	welcome_message =	"(1) Start the blockchain simulator\n"\
 						"(2) Credits\n"\
@@ -175,5 +181,5 @@ def main():
 	
 
 if __name__ == "__main__":
-
+    os.system('cls' if os.name=='nt' else 'clear');
     main();
