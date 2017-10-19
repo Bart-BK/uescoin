@@ -6,6 +6,8 @@ import socket
 import select
 # Import OS
 import os
+# Import UUID
+import uuid
 
 # Client socket
 class Client_UESCOIN:
@@ -25,8 +27,8 @@ class Client_UESCOIN:
 		# Else, request the input for the HOST and PORT
 		else:
 			print("Failed to get the HOST and PORT\n");
-			HOST = raw_input("Enter the HOST: ");
-			PORT = raw_input("Enter the PORT: ");
+			HOST = input("Enter the HOST: ");
+			PORT = input("Enter the PORT: ");
 
 		# Return the HOST and PORT
 		return HOST,PORT;
@@ -38,7 +40,7 @@ class Client_UESCOIN:
 		except:
 			# If CONNECTION not receive an int
 			while(self.isNotInt(PORT, "PORT")):
-				PORT = raw_input("Enter the PORT (must be int): ");
+				PORT = input("Enter the PORT (must be int): ");
 			CONNECTION = (HOST, int(PORT));
 
 		print("Connecting to "+HOST+"::"+PORT);
@@ -51,14 +53,14 @@ class Client_UESCOIN:
 		except:
 			print ("Error in connection "+HOST+"::"+PORT);
 			# If have any trouble, try receive again
-			choice = raw_input("[A]bort, [C]hange ou [T]ry again?");
+			choice = input("[A]bort, [C]hange ou [T]ry again?");
 			# Choice is abort
 			if(choice.lower() == "a"):
 				exit();
 			# Choice is change
 			elif(choice.lower() == "c"):
-				HOST = raw_input("Enter the HOST: ");
-				PORT = raw_input("Enter the PORT: ");
+				HOST = input("Enter the HOST: ");
+				PORT = input("Enter the PORT: ");
 			
 			self.connect(HOST,PORT);
 
@@ -95,17 +97,20 @@ class Client_UESCOIN:
 						exit();
 					else :
 						# Clear the console
-						self.clear();
+						#self.clear();
 						try:
 							# If received a block command, dont print the command
 							# Here is where the commands will be received, if print, will print
-							'''
-							if(data[0] == "B"):
-								print(data[1:]);
+							
+							#Receive and set the ID
+							if(data[0:5] == "[PID]"):
+								self.id = data[5:10];
+								self.init_Transactions_Table();
+								print(data[10:]);
 							else:
 								# Print message
 								print(data);
-							'''
+							
 
 						except Exception as e:
 							print(str(e));
@@ -117,6 +122,16 @@ class Client_UESCOIN:
 					# Clear buffer
 					stdout.flush();
 	
+	# Init the transactions table
+	def init_Transactions_Table(self):
+		tabela = open(self.id+".txt", 'w+');
+		tabela.writelines("data | valor | cedente | receptor | saldoCedente | saldoReceptor\n");
+		tabela.close();
+
+	# Init the ids table
+	def init_Id_Table(self):
+		print("Não implementado ainda");
+
 	def commit(self, tid):
 		#data.encode()
 		print("Nao implementado ainda");
@@ -141,7 +156,7 @@ def main():
 						"(3) Quit\n\n";
 
 	# Display a welcome message
-	choice = raw_input(title + welcome_message);
+	choice = input(title + welcome_message);
 
 	while True:
 		try:
@@ -163,8 +178,8 @@ def main():
 
 			# Show Credits
 			elif(int(choice) == 2):
-				credits = "\UESCOIN made by:\n\nPrabhat Kumar de Oliveira\nEberty Alveszn";
-				choice = raw_input(title + credits + welcome_message);
+				credits = "UESCOIN made by:\n\nPrabhat Kumar de Oliveira\nEberty Alves\n";
+				choice = input(title + credits + welcome_message);
 
 			# Exit
 			elif(int(choice) == 3):
@@ -174,11 +189,11 @@ def main():
 			# Invalid choice (if int)
 			else:
 			    while((int(choice) < 1) or (int(choice) > 3)):
-			        choice = raw_input("Please, enter valid choice: ");
+			        choice = input("Please, enter valid choice: ");
 
         # Invalid choice (if not int)
 		except Exception as e:
-			choice = raw_input("Invalid choice, please enter again (must be int): ");
+			choice = input("Invalid choice, please enter again (must be int): ");
 	
 
 if __name__ == "__main__":

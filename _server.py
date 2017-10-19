@@ -17,7 +17,8 @@ class Server_UESCOIN:
         self.server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM);
         # Set socket options
         self.server_socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1);
-        
+        # Array of sockets
+        self.socket_list = [];
 
     def get_PORT(self):
         # The HOST can bind all (not necessary especific host);
@@ -28,7 +29,7 @@ class Server_UESCOIN:
             PORT = argv[1];
         else:
             print("Failed to get the PORT\n");
-            PORT = raw_input("Enter the PORT: ");
+            PORT = input("Enter the PORT: ");
 
         # Return the HOST and PORT
         return HOST,PORT;
@@ -40,7 +41,7 @@ class Server_UESCOIN:
         except:
             # If CONNECTION not receive an int
             while(self.isNotInt(PORT)):
-                PORT = raw_input("Enter the PORT (must be int): ");
+                PORT = input("Enter the PORT (must be int): ");
             CONNECTION = (HOST, int(PORT));
 
         while True:
@@ -55,14 +56,14 @@ class Server_UESCOIN:
             except Exception as e:
                 # If have any trouble
                 print ("There is an error in bind "+PORT+ str(e));
-                choice = raw_input("[A]bort, [C]hange ou [T]ry again?");
+                choice = input("[A]bort, [C]hange ou [T]ry again?");
 
                 # If choice is abort
                 if(choice.lower() == 'a'):
                     exit();
                 # If choice is change
                 elif(choice.lower() == 'c'):
-                    PORT = raw_input("Enter the PORT: ");
+                    PORT = input("Enter the PORT: ");
 
                 self.bind(HOST,PORT);
 
@@ -72,14 +73,12 @@ class Server_UESCOIN:
         self.server_socket.close();
 
     def start(self):
-        # Array of sockets
-        socket_list = [];
         # Add server socket object to the list of readable connections
-        socket_list.append(self.server_socket);
+        self.socket_list.append(self.server_socket);
         
         while True:
             # Get the list sockets which are ready to be read through select
-            ready_to_read,ready_to_write,in_error = select.select(socket_list,[],[],0);
+            ready_to_read,ready_to_write,in_error = select.select(self.socket_list,[],[],0);
 
             for sock in ready_to_read:
                 # A new connection request recieved
@@ -87,41 +86,38 @@ class Server_UESCOIN:
                     # Accept the connection
                     sockfd, addr = self.server_socket.accept();
                     
-                    socket_list.append(sockfd);
+                    self.socket_list.append(sockfd);
 
                     print("Player (%s, %s) connected" % addr);
-                        
 
-    def main_loop(self, blockchain):
+                    # Get IP connection and Socket ID
+                    sockip, sockid = addr;
+                    self.broadcast( self.server_socket, sockfd, str(sockid));
+
+    def main_loop(self):
         
         RECV_BUFFER = 1024;
 
         ''' Here is where the logic of blockchain will be implemented '''
 
     # broadcast messages to all connected clients
-    def broadcast (self, server_socket, sock, message):
-        for socket in blockchain:
+    def broadcast (self, server_socket, target, message):
+        for socket in self.socket_list:
             # send the message only to peer
-            if socket != server_socket and socket != sock :
+            if socket != server_socket:
                 try :
-                    socket.send(message);
+                    #If socket is not itself
+                    if(socket != target):
+                        socket.send(("Peer "+message+" conectado").encode());
+                    else:
+                        socket.send(("[PID]"+message+"Bem vindo ao UESCOIN").encode());
                 except :
                     # broken socket connection
                     socket.close();
                     # broken socket, remove it
-                    if socket in blockchain:
-                        blockchain.remove(socket);
+                    if socket in self.socket_list:
+                        self.socket_list.remove(socket);
  
-class Tabela_Transacoes:
-	#def __init__(self):
-	
-	def inicia_saldo(self):
-		print("Todos iram receber 100 Ucoins");
-		return 100;
-	
-	def verifica_saldo(self):
-		print("Nao implementado ainda");
-
  
 def main():
     title = "          _______  _______  _______  _______ _________ _       \n"\
@@ -139,7 +135,7 @@ def main():
                         "(3) Quit\n\n";
 
     # Display a welcome message
-    choice = raw_input(title + welcome_message);
+    choice = input(title + welcome_message);
 
     while True:
         try:
@@ -165,7 +161,7 @@ def main():
             # Show credits
             elif(int(choice) == 2):
                 credits = "\nUESCOIN made by:\n\nPrabhat Kumar de Oliveira\nEberty Alves\n";
-                choice = raw_input(title + credits + welcome_message);
+                choice = input(title + credits + welcome_message);
 
             # Exit
             elif(int(choice) == 3):
@@ -175,10 +171,11 @@ def main():
             # Invalid choice (if int)
             else:
                 while((int(choice) < 1) or (int(choice) > 3)):
-                    choice = raw_input("Please, enter valid choice: ");
+                    choice = input("Please, enter valid choice: ");
         # Invalid choice (if not int)
         except Exception as e:
-            choice = raw_input("Invalid choice, please enter again (must be int): ");
+            choice = input("Invalid choice, please enter again (must be int): ");
+            print(str(e));
 
 if __name__ == "__main__":
     os.system('cls' if os.name=='nt' else 'clear');
