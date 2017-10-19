@@ -6,8 +6,10 @@ import select
 from sys import argv 
 # Import random (to select who starts)
 import random
-
+# Import os (to clear function)
 import os
+clear = lambda: os.system('cls' if os.name == 'nt' else 'clear') #Limpar tela
+
 
 class Server_UESCOIN:
     """This is the server, and the logic of the blockchain"""
@@ -128,9 +130,9 @@ def main():
             " | |   | || (            ) || |      | |   | |   | |   | | \   |\n"\
             " | (___) || (____/\/\____) || (____/\| (___) |___) (___| )  \  |\n"\
             " (_______)(_______/\_______)(_______/(_______)\_______/|/    )_)\n"\
-            "                                                                \n\n";
+            "                                                                \n";
 
-    welcome_message =   "(1) Start host for the blockchain simulator\n"\
+    welcome_message =   "\n\n(1) Start host for the blockchain simulator\n"\
                         "(2) Credits\n"\
                         "(3) Quit\n\n";
 
@@ -160,7 +162,7 @@ def main():
 
             # Show credits
             elif(int(choice) == 2):
-                credits = "\nUESCOIN made by:\n\nPrabhat Kumar de Oliveira\nEberty Alves\n";
+                credits = "UESCOIN made by:\n\nPrabhat Kumar de Oliveira\nEberty Alves da Silva\nIago Farias\n";
                 choice = input(title + credits + welcome_message);
 
             # Exit
@@ -178,5 +180,6 @@ def main():
             print(str(e));
 
 if __name__ == "__main__":
-    os.system('cls' if os.name=='nt' else 'clear');
+    #os.system('cls' if os.name=='nt' else 'clear');
+    clear();
     main();
