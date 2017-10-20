@@ -4,8 +4,10 @@ from sys import argv, stdin, stdout
 import socket
 # Import select
 import select
+# Import time
+import time # For timestamp
 # Import UUID
-import uuid
+import uuid # For generate random ID
 # Import os (to clear function)
 import os
 clear = lambda: os.system('cls' if os.name == 'nt' else 'clear') #Limpar tela
@@ -105,46 +107,118 @@ class Client_UESCOIN:
 							# If received a block command, dont print the command
 							# Here is where the commands will be received, if print, will print
 							
-							#Receive and set the ID
+							# Receive and set the ID
 							if(data[0:5] == "[PID]"):
+								# SET my ID
 								self.id = data[5:10];
+								# Create Table of transactions
 								self.init_Transactions_Table();
+								# Create Table of IDS
+								self.init_ID_Table();
+								# Show MY ID
 								print(data[10:]);
-							else:
-								# Print message
-								print(data);
+								# Generate my PKEY (Public Key)
+								self.pKey  = uuid.uuid4().int;
+								# Show my PKEY
+								print("Minha pKey eh: "+self.getPKey());
+								tupleKey = self.id+"  | "+self.getPKey();
+								# Give PKey to server (PUBLIC KEY)
+								sock.sendall(tupleKey.encode());
 							
+							# Receive new ID
+							elif (data[0:5] == "[UID]"):
+								# IF has new ID, add in my txt of ids
+								self.add_in_ID_Table(data[5:]);
+							
+							else:
+								# If is not a command, Print message
+								print(data);
 
 						except Exception as e:
 							print(str(e));
-						
 
 				else :
 					# Here is where the command insertion will be prompted
-					
+					# Clear buffer
+					# If i want a transaction, write 'transaction'
+					if input() == "transaction":
+						# Get value
+						value = input("Insira o valor: ");
+						# Get receiver
+						receiver = input("Insira o codigo do receptor: ");
+						# Call the transaction function
+						self.transaction(uuid.uuid4().hex,time.time(), value, self.id, receiver, self.pKey);
 					# Clear buffer
 					stdout.flush();
 	
+	# Get PKey
+	def getPKey(self):
+		return str(self.pKey);
+
 	# Init the transactions table
 	def init_Transactions_Table(self):
-		tabela = open(self.id+".txt", 'w+');
-		tabela.writelines("data | valor | cedente | receptor | saldoCedente | saldoReceptor\n");
-		tabela.close();
+		# Create txt
+		tabelaTransacao = open(self.id+".txt", 'w+');
+		# Header of txt
+		tabelaTransacao.writelines("data | valor | cedente | receptor | saldoCedente | saldoReceptor\n");
+		# Close txt
+		tabelaTransacao.close();
 
 	# Init the ids table
-	def init_Id_Table(self):
-		print("Nao implementado ainda");
+	def init_ID_Table(self):
+		# Create txt
+		tabelaID = open(self.id+"_keys.txt", 'w+');
+		# Header of txt
+		tabelaID.writelines("peerID | pKey\n");
+		# Close txt
+		tabelaID.close();
+
+	# Add new peer's id to table of ids
+	def add_in_ID_Table(self, data):
+		# Open txt
+		tabelaID = open(self.id+"_keys.txt", 'a');
+		# Add to end of file
+		tabelaID.writelines(data+"\n");
+		# Close txt
+		tabelaID.close();
 
 	def commit(self, tid):
 		#data.encode()
 		print("Nao implementado ainda");
 	
 	def transaction(self, tid, timestamp, value, giver, receiver, pkey):
-		print("Nao implementado ainda");
-	
+		clear(); # Clear the console
+		print("Transacao em processo\n"); # Show message
+		print("ID da transacao "+tid+"\n"); # Show TID
+		if(giver == self.id and pkey == self.pKey): # Check if was me who called the function
+			transacaoValida = False; # Set a flag !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! NÃO FUNCIONA AINDA
+			for line in reversed(list(open(self.id+".txt"))): # Read the file bottom up
+				arrayItems = line.split(' | '); # Split the file headers and values
+				# Only print to check 
+				print(arrayItems[3]);
+				print(arrayItems[2]);
+				print("ID : "+self.id);
+				# It was to be "If i'm a receiver recently"
+				if(arrayItems[3] == self.id):
+					print(arrayItems[3]);
+					# And if i have money
+					if(int(arrayItems[5]) >= value):
+						print(arrayItems[5]);
+						print("Voce tem grana suficiente\n");
+						transacaoValida = True; # Set flag on
+				# It was to be "If i'm a giver"
+				elif(arrayItems[2] == self.id):
+					# But i have cash yet
+					if(int(arrayItems[4]) >= value):
+						print("Voce tem grana suficiente\n");
+						transacaoValida = True; # Set flag on
+			if(transacaoValida == False): # If flag is off
+				print("Desculpe, voce nao tem saldo suficiente\n");
+			else:
+				print("Transacao efetuada com sucesso\n");
 	
 def main():
-	title = "          _______  _______  _______  _______ _________ _       \n"\
+	title = "           _______  _______  _______  _______ _________ _       \n"\
 			" |\     /|(  ____ \(  ____ \(  ____ \(  ___  )\__   __/( (    /|\n"\
 			" | )   ( || (    \/| (    \/| (    \/| (   ) |   ) (   |  \  ( |\n"\
 			" | |   | || (__    | (_____ | |      | |   | |   | |   |   \ | |\n"\
@@ -197,6 +271,7 @@ def main():
         # Invalid choice (if not int)
 		except Exception as e:
 			choice = input("Invalid choice, please enter again (must be int): ");
+			print(e);
 	
 
 if __name__ == "__main__":

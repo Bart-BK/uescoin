@@ -6,6 +6,8 @@ import select
 from sys import argv 
 # Import random (to select who starts)
 import random
+# Import UUID
+import uuid
 # Import os (to clear function)
 import os
 clear = lambda: os.system('cls' if os.name == 'nt' else 'clear') #Limpar tela
@@ -93,8 +95,26 @@ class Server_UESCOIN:
                     print("Player (%s, %s) connected" % addr);
 
                     # Get IP connection and Socket ID
-                    sockip, sockid = addr;
-                    self.broadcast( self.server_socket, sockfd, str(sockid));
+                    sockip, sockid = addr; # Get HOST and PORT (the port will be the peer ID)
+                    # [PID] = Peer ID
+                    self.broadcast( self.server_socket, sockfd, "[PID]"+str(sockid)+"Bem vindo ao UESCOIN");
+                    
+                else:
+                    try:
+                        # If received a command
+                        data = sock.recv(1024);
+
+                        if data: # and its data
+                            newData = str(data);
+                            print("PKey do cliente eh "+newData); # print the public key received
+                            # Send to all peers connecteds (less the owner of public key)
+                            self.broadcast( self.server_socket, sock, "[UID]"+newData[2:-1]);
+                        else: # if is not data, some trouble happens, so kill them
+                            self.socket_list.remove(sock);
+                    except:
+                        pass;
+                    
+                    
 
     def main_loop(self):
         
@@ -110,9 +130,9 @@ class Server_UESCOIN:
                 try :
                     #If socket is not itself
                     if(socket != target):
-                        socket.send(("Peer "+message+" conectado").encode());
+                        socket.send(("[UID]"+message[5:]).encode());
                     else:
-                        socket.send(("[PID]"+message+"Bem vindo ao UESCOIN").encode());
+                        socket.send(message.encode());
                 except :
                     # broken socket connection
                     socket.close();
@@ -122,7 +142,7 @@ class Server_UESCOIN:
  
  
 def main():
-    title = "          _______  _______  _______  _______ _________ _       \n"\
+    title = "           _______  _______  _______  _______ _________ _       \n"\
             " |\     /|(  ____ \(  ____ \(  ____ \(  ___  )\__   __/( (    /|\n"\
             " | )   ( || (    \/| (    \/| (    \/| (   ) |   ) (   |  \  ( |\n"\
             " | |   | || (__    | (_____ | |      | |   | |   | |   |   \ | |\n"\
