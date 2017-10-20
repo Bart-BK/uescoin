@@ -1,4 +1,4 @@
-# Import from sys 
+# Import from sys
 from sys import argv, stdin, stdout
 # Import sockets
 import socket
@@ -10,7 +10,8 @@ import time # For timestamp
 import uuid # For generate random ID
 # Import os (to clear function)
 import os
-clear = lambda: os.system('cls' if os.name == 'nt' else 'clear') #Limpar tela
+clear = lambda: os.system('cls' if os.name == 'nt' else 'clear') #Cear screen
+
 
 # Client socket
 class Client_UESCOIN:
@@ -21,7 +22,7 @@ class Client_UESCOIN:
 		self.client_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM);
 		# Set timeout connection
 		self.client_socket.settimeout(10);
-	
+
 	def get_HOST_PORT(self):
 		# Case HOST and PORT given by command line
 		if(len(argv) == 3):
@@ -35,6 +36,14 @@ class Client_UESCOIN:
 
 		# Return the HOST and PORT
 		return HOST,PORT;
+
+	def isNotInt(self, value):
+		try:
+			if(int(value) > 0):
+				return False;
+			return True;
+		except: # The value isn't a int type
+			return True;
 
 	def connect(self, HOST, PORT):
 		# Define connection
@@ -55,6 +64,9 @@ class Client_UESCOIN:
 
 		except:
 			print ("Error in connection "+HOST+"::"+PORT);
+			print ("Aborting...\n")
+			exit();
+			"""
 			# If have any trouble, try receive again
 			choice = input("[A]bort, [C]hange ou [T]ry again?");
 			# Choice is abort
@@ -64,19 +76,14 @@ class Client_UESCOIN:
 			elif(choice.lower() == "c"):
 				HOST = input("Enter the HOST: ");
 				PORT = input("Enter the PORT: ");
-			
-			self.connect(HOST,PORT);
 
-	"""
-	def clear(self):
-		# Clear the console (works in linux and windows)
-		os.system('cls' if os.name=='nt' else 'clear');
-	"""
-	
+			self.connect(HOST,PORT);
+			"""
+
 	def recv(self, sock):
 		# Receive a message from socket
 		return sock.recv(4096);
-	
+
 	def start(self):
 
 		while 1:
@@ -85,9 +92,9 @@ class Client_UESCOIN:
 
 			# Get the list sockets which are readable
 			ready_to_read,ready_to_write,in_error = select.select(socket_list , [], []);
-		     
+
 			for sock in ready_to_read:
-				# If sock is this client        
+				# If sock is this client
 				if sock == self.client_socket:
 					# Incoming position from remote server
 
@@ -106,7 +113,7 @@ class Client_UESCOIN:
 						try:
 							# If received a block command, dont print the command
 							# Here is where the commands will be received, if print, will print
-							
+
 							# Receive and set the ID
 							if(data[0:5] == "[PID]"):
 								# SET my ID
@@ -120,16 +127,16 @@ class Client_UESCOIN:
 								# Generate my PKEY (Public Key)
 								self.pKey  = uuid.uuid4().int;
 								# Show my PKEY
-								print("Minha pKey eh: "+self.getPKey());
+								print("My pKey: "+self.getPKey());
 								tupleKey = self.id+"  | "+self.getPKey();
 								# Give PKey to server (PUBLIC KEY)
 								sock.sendall(tupleKey.encode());
-							
+
 							# Receive new ID
 							elif (data[0:5] == "[UID]"):
 								# IF has new ID, add in my txt of ids
 								self.add_in_ID_Table(data[5:]);
-							
+
 							else:
 								# If is not a command, Print message
 								print(data);
@@ -143,14 +150,14 @@ class Client_UESCOIN:
 					# If i want a transaction, write 'transaction'
 					if input() == "transaction":
 						# Get value
-						value = input("Insira o valor: ");
+						value = input("Enter the value: ");
 						# Get receiver
-						receiver = input("Insira o codigo do receptor: ");
+						receiver = input("Enter receiver code: ");
 						# Call the transaction function
 						self.transaction(uuid.uuid4().hex,time.time(), value, self.id, receiver, self.pKey);
 					# Clear buffer
 					stdout.flush();
-	
+
 	# Get PKey
 	def getPKey(self):
 		return str(self.pKey);
@@ -184,39 +191,46 @@ class Client_UESCOIN:
 
 	def commit(self, tid):
 		#data.encode()
-		print("Nao implementado ainda");
-	
+		#mandar pro servidor
+		#esperar o ack
+		print("\nDon't implemented yet");
+
 	def transaction(self, tid, timestamp, value, giver, receiver, pkey):
 		clear(); # Clear the console
-		print("Transacao em processo\n"); # Show message
-		print("ID da transacao "+tid+"\n"); # Show TID
+		print("Transaction in progress\n"); # Show message
+		print("Transaction ID "+tid+"\n"); # Show TID
+
 		if(giver == self.id and pkey == self.pKey): # Check if was me who called the function
-			transacaoValida = False; # Set a flag !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! NÃO FUNCIONA AINDA
+			transacaoValida = False; # Set a flag !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! NAO FUNCIONA AINDA
 			for line in reversed(list(open(self.id+".txt"))): # Read the file bottom up
 				arrayItems = line.split(' | '); # Split the file headers and values
-				# Only print to check 
-				print(arrayItems[3]);
-				print(arrayItems[2]);
-				print("ID : "+self.id);
+				#("data | valor | cedente | receptor | saldoCedente | saldoReceptor\n");
+				#   0  	| 	1	|	2	  |		3	 | 		4 		| 		5
+				# 0 | 0 | AQUI_VAI_O_ID | 20 | 200 | 0 # Colocar isso no arquivo
+				# Only print to check
+				#print(arrayItems[3]);
+				#print(arrayItems[2]);
+				#print("ID : "+self.id);
 				# It was to be "If i'm a receiver recently"
 				if(arrayItems[3] == self.id):
-					print(arrayItems[3]);
 					# And if i have money
-					if(int(arrayItems[5]) >= value):
+					if(int(arrayItems[5]) >= int(value)):
 						print(arrayItems[5]);
-						print("Voce tem grana suficiente\n");
+						#print("You have money enough\n");
 						transacaoValida = True; # Set flag on
 				# It was to be "If i'm a giver"
 				elif(arrayItems[2] == self.id):
 					# But i have cash yet
-					if(int(arrayItems[4]) >= value):
-						print("Voce tem grana suficiente\n");
+					if(int(arrayItems[4]) >= int(value)):
+						#print("You have money enough\n");
 						transacaoValida = True; # Set flag on
+
 			if(transacaoValida == False): # If flag is off
-				print("Desculpe, voce nao tem saldo suficiente\n");
+				print("Sorry, you don't have money enough\n");
 			else:
-				print("Transacao efetuada com sucesso\n");
-	
+				print("Transaction effected with success\n");
+
+
 def main():
 	title = "           _______  _______  _______  _______ _________ _       \n"\
 			" |\     /|(  ____ \(  ____ \(  ____ \(  ___  )\__   __/( (    /|\n"\
@@ -230,7 +244,8 @@ def main():
 
 	welcome_message =	"\n\n(1) Start the blockchain simulator\n"\
 						"(2) Credits\n"\
-						"(3) Quit\n\n";
+						"(3) Quit\n"\
+                        "\nYour Choice: ";
 
 	# Display a welcome message
 	choice = input(title + welcome_message);
@@ -255,11 +270,15 @@ def main():
 
 			# Show Credits
 			elif(int(choice) == 2):
-				credits = "UESCOIN made by:\n\nPrabhat Kumar de Oliveira\nEberty Alves da Silva\nIago Farias\n";
-				choice = input(title + credits + welcome_message);
+				clear();
+				credits = "UESCOIN made by:\n\nPrabhat Kumar de Oliveira\nEberty Alves da Silva\nIago Farias Santana\n\nPress Enter to continue...\n\n";
+				aux = input(title + credits)
+				clear();
+				choice = input(title + welcome_message);
 
 			# Exit
 			elif(int(choice) == 3):
+				clear();
 				print("Exiting...\n");
 				exit();
 
@@ -272,9 +291,8 @@ def main():
 		except Exception as e:
 			choice = input("Invalid choice, please enter again (must be int): ");
 			print(e);
-	
+
 
 if __name__ == "__main__":
-    #os.system('cls' if os.name=='nt' else 'clear');
     clear();
     main();

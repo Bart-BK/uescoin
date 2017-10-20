@@ -10,7 +10,7 @@ import random
 import uuid
 # Import os (to clear function)
 import os
-clear = lambda: os.system('cls' if os.name == 'nt' else 'clear') #Limpar tela
+clear = lambda: os.system('cls' if os.name == 'nt' else 'clear') #Clear screen
 
 
 class Server_UESCOIN:
@@ -32,11 +32,19 @@ class Server_UESCOIN:
         if(len(argv) == 2):
             PORT = argv[1];
         else:
-            print("Failed to get the PORT\n");
+            # print("Failed to get the PORT\n");
             PORT = input("Enter the PORT: ");
 
         # Return the HOST and PORT
         return HOST,PORT;
+        
+    def isNotInt(self, value):
+        try:
+            if(int(value) > 0):
+                return False;
+            return True;
+        except: # The value isn't a int type
+            return True;
 
     def bind(self, HOST, PORT):
         # Define connection
@@ -53,24 +61,28 @@ class Server_UESCOIN:
             try:
                 self.server_socket.bind(CONNECTION);
                 self.server_socket.listen(100);
-
-                print("Bind done, waiting for clients...");
+                print("\nBind done, waiting for clients...");
                 break;
 
             except Exception as e:
                 # If have any trouble
-                print ("There is an error in bind "+PORT+ str(e));
-                choice = input("[A]bort, [C]hange ou [T]ry again?");
+                print ("\nThere is an error in bind "+PORT+" "+str(e));
+                print ("Aborting...\n")
+                exit();
+                """
+                # If have any trouble
+                print ("\nThere is an error in bind "+PORT+" "+str(e));
+                choice = input("[A]bort, [C]hange ou [T]ry again? ");
 
                 # If choice is abort
                 if(choice.lower() == 'a'):
                     exit();
                 # If choice is change
                 elif(choice.lower() == 'c'):
-                    PORT = input("Enter the PORT: ");
-
+                    PORT = input("\nEnter the PORT: ");
+                
                 self.bind(HOST,PORT);
-
+                """
 
     def close(self):
         # Close the socket server
@@ -97,7 +109,7 @@ class Server_UESCOIN:
                     # Get IP connection and Socket ID
                     sockip, sockid = addr; # Get HOST and PORT (the port will be the peer ID)
                     # [PID] = Peer ID
-                    self.broadcast( self.server_socket, sockfd, "[PID]"+str(sockid)+"Bem vindo ao UESCOIN");
+                    self.broadcast( self.server_socket, sockfd, "[PID]"+str(sockid)+"Welcome to UESCOIN");
                     
                 else:
                     try:
@@ -106,7 +118,7 @@ class Server_UESCOIN:
 
                         if data: # and its data
                             newData = str(data);
-                            print("PKey do cliente eh "+newData); # print the public key received
+                            print("Cliente PKey: "+newData); # print the public key received
                             # Send to all peers connecteds (less the owner of public key)
                             self.broadcast( self.server_socket, sock, "[UID]"+newData[2:-1]);
                         else: # if is not data, some trouble happens, so kill them
@@ -117,7 +129,6 @@ class Server_UESCOIN:
                     
 
     def main_loop(self):
-        
         RECV_BUFFER = 1024;
 
         ''' Here is where the logic of blockchain will be implemented '''
@@ -154,7 +165,8 @@ def main():
 
     welcome_message =   "\n\n(1) Start host for the blockchain simulator\n"\
                         "(2) Credits\n"\
-                        "(3) Quit\n\n";
+                        "(3) Quit\n"\
+                        "\nYour Choice: ";
 
     # Display a welcome message
     choice = input(title + welcome_message);
@@ -180,13 +192,17 @@ def main():
 
                 exit();
 
-            # Show credits
+            # Show Credits
             elif(int(choice) == 2):
-                credits = "UESCOIN made by:\n\nPrabhat Kumar de Oliveira\nEberty Alves da Silva\nIago Farias\n";
-                choice = input(title + credits + welcome_message);
+                clear();
+                credits = "UESCOIN made by:\n\nPrabhat Kumar de Oliveira\nEberty Alves da Silva\nIago Farias Santana\n\nPress Enter to continue...\n\n";
+                aux = input(title + credits)
+                clear();
+                choice = input(title + welcome_message);
 
-            # Exit
+			# Exit
             elif(int(choice) == 3):
+                clear();
                 print("Exiting...\n");
                 exit();
 
@@ -194,12 +210,12 @@ def main():
             else:
                 while((int(choice) < 1) or (int(choice) > 3)):
                     choice = input("Please, enter valid choice: ");
+
         # Invalid choice (if not int)
         except Exception as e:
             choice = input("Invalid choice, please enter again (must be int): ");
             print(str(e));
 
 if __name__ == "__main__":
-    #os.system('cls' if os.name=='nt' else 'clear');
     clear();
     main();
