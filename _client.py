@@ -200,6 +200,7 @@ class Client_UESCOIN:
 		print("Transaction in progress\n"); # Show message
 		print("Transaction ID "+tid+"\n"); # Show TID
 
+		# verificar pkey chama como função
 		if(giver == self.id and pkey == self.pKey): # Check if was me who called the function
 			transacaoValida = False; # Set a flag !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! NAO FUNCIONA AINDA
 			for line in reversed(list(open(self.id+".txt"))): # Read the file bottom up

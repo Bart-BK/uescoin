@@ -109,6 +109,7 @@ class Server_UESCOIN:
                     # Get IP connection and Socket ID
                     sockip, sockid = addr; # Get HOST and PORT (the port will be the peer ID)
                     # [PID] = Peer ID
+                    #erro
                     self.broadcast( self.server_socket, sockfd, "[PID]"+str(sockid)+"Welcome to UESCOIN");
                     
                 else:
