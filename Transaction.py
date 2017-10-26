@@ -8,8 +8,12 @@ class Transaction(object):
         self.time = 0;
         self.giver = Peer(); # Verificate if is right
         self.receiver = Peer(); # Verificate if is right
+        self.balanceGiver = 0;
+        self.balanceReceiver = 0;
 
-    def getTId(self):
+        self.status = 'pendente';
+
+    def getTid(self):
         # Return the self tid
         return self.tid;
 
@@ -29,7 +33,19 @@ class Transaction(object):
         # Return the self receiver
         return self.receiver;
 
-    def setTId(self, TId):
+    def getBalanceGiver(self):
+        # Return the self balance of giver
+        return self.balanceGiver;
+
+    def getBalanceReceiver(self):
+        # Return the self balance of receiver
+        return self.balanceReceiver;
+
+    def getStatus(self):
+
+        return self.status;
+
+    def setTid(self, TId):
         # Set the Tid
         self.tid = TId;
 
@@ -49,5 +65,30 @@ class Transaction(object):
         # Set the Receiver
         self.receiver = receiver;
 
-    
- 
+    def setBalanceGiver(self, balanceGiver):
+        # Set the self balance of giver
+        self.balanceGiver = balanceGiver;
+
+    def setBalanceReceiver(self, balanceReceiver):
+        # Set the self balance of receiver
+        self.balanceReceiver = balanceReceiver;
+
+    def setStatus(self, status):
+
+        self.status = status;
+
+    ''' Fazer analise se e necessario '''
+    def initTempTable(self, tempFile):
+        open(tempFile, 'w+');
+        # Header of txt
+        tabelaTransacao.writelines("tid | data | valor | cedente | receptor | saldoCedente | saldoReceptor");
+        # Close txt
+        tabelaTransacao.close();
+
+    def insertTempTable(self, tempFile):
+        # Create txt
+        tabelaTransacao = open(tempFile, 'a');
+        # Header of txt
+        tabelaTransacao.writelines(self.getTid+" | "+self.getTime+" | "+self.getValue+" | "+self.getGiver+" | "+self.getReceiver+" | "+self.getBalanceGiver+" | "+self.getBalanceReceiver);
+        # Close txt
+        tabelaTransacao.close();
