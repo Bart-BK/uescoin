@@ -45,10 +45,20 @@ class Test1(object):
 
 					if not data :
 						# Some trouble ...
-						print ('\nDisconnected from blockchain\n');
-						exit();
+						#print ('\nDisconnected from blockchain\n');
+						#exit();
+						#message = "NACK";
+						#sock.send(message.encode());
+						pass
 					else :
 						print(data);
+
+						if(input() == "ack"):
+							message = "ACK";
+							sock.send(message.encode());
+						else:
+							print("comando nao reconhecido");
+						#sockfd.send(message.encode());
 
 if __name__ == "__main__":
 	test = Test1();

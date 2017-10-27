@@ -42,12 +42,13 @@ class Dispatcher(object):
 				try:
 					#sock.send(("Hello World").encode());
 					# If received a command
-					#data = sock.recv(1024);
+					data = sock.recv(1024);
 					if data: # and its data
 						print("recebendo dados");
 						#arrayItems = data.split(' | ');
 					else: # if is not data, some trouble happens, so kill them
-						self.socket_list.remove(sock);
+						#self.socket_list.remove(sock);
+						pass
 				except:
 					pass;
 
