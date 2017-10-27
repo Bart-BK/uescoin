@@ -47,17 +47,13 @@ class Test1(object):
 						# Some trouble ...
 						#print ('\nDisconnected from blockchain\n');
 						#exit();
-						#message = "NACK";
-						#sock.send(message.encode());
+						message = "NACK";
+						sock.send(message.encode());
 						pass
 					else :
 						print(data);
-
-						if(input() == "ack"):
-							message = "ACK";
-							sock.send(message.encode());
-						else:
-							print("comando nao reconhecido");
+						message = "ACK";
+						sock.send(message.encode());
 						#sockfd.send(message.encode());
 
 if __name__ == "__main__":

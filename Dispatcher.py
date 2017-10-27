@@ -38,6 +38,13 @@ class Dispatcher(object):
 
 				message = "Oi";
 				sockfd.send(message.encode());
+				print ("recebendo")
+				# Receive the message
+				data = sockfd.recv(1024);
+				print("recebido")
+				# Decode the received data
+				data = data.decode();
+				print(data);
 			else:
 				try:
 					#sock.send(("Hello World").encode());
