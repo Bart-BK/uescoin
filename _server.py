@@ -3,7 +3,7 @@ import socket
 # Import select
 import select
 # Import argv
-from sys import argv 
+from sys import argv
 # Import random (to select who starts)
 import random
 # Import UUID
@@ -37,7 +37,7 @@ class Server_UESCOIN:
 
         # Return the HOST and PORT
         return HOST,PORT;
-        
+
     def isNotInt(self, value):
         try:
             if(int(value) > 0):
@@ -69,20 +69,7 @@ class Server_UESCOIN:
                 print ("\nThere is an error in bind "+PORT+" "+str(e));
                 print ("Aborting...\n")
                 exit();
-                """
-                # If have any trouble
-                print ("\nThere is an error in bind "+PORT+" "+str(e));
-                choice = input("[A]bort, [C]hange ou [T]ry again? ");
 
-                # If choice is abort
-                if(choice.lower() == 'a'):
-                    exit();
-                # If choice is change
-                elif(choice.lower() == 'c'):
-                    PORT = input("\nEnter the PORT: ");
-                
-                self.bind(HOST,PORT);
-                """
 
     def close(self):
         # Close the socket server
@@ -91,17 +78,17 @@ class Server_UESCOIN:
     def start(self):
         # Add server socket object to the list of readable connections
         self.socket_list.append(self.server_socket);
-        
+
         while True:
             # Get the list sockets which are ready to be read through select
             ready_to_read,ready_to_write,in_error = select.select(self.socket_list,[],[],0);
 
             for sock in ready_to_read:
                 # A new connection request recieved
-                if sock == self.server_socket: 
+                if sock == self.server_socket:
                     # Accept the connection
                     sockfd, addr = self.server_socket.accept();
-                    
+
                     self.socket_list.append(sockfd);
 
                     print("Player (%s, %s) connected" % addr);
@@ -110,10 +97,12 @@ class Server_UESCOIN:
                     sockip, sockid = addr; # Get HOST and PORT (the port will be the peer ID)
                     # [PID] = Peer ID
                     #erro
-                    self.broadcast( self.server_socket, sockfd, "[PID]"+str(sockid)+"Welcome to UESCOIN");
-                    
+                    sockfd.send(("To aqui").encode());
+                    #self.broadcast( self.server_socket, sockfd, "To aqui");
+
                 else:
                     try:
+                        #sock.send(("To aqui").encode());
                         # If received a command
                         data = sock.recv(1024);
 
@@ -121,13 +110,13 @@ class Server_UESCOIN:
                             newData = str(data);
                             print("Cliente PKey: "+newData); # print the public key received
                             # Send to all peers connecteds (less the owner of public key)
-                            self.broadcast( self.server_socket, sock, "[UID]"+newData[2:-1]);
+                            #self.broadcast( self.server_socket, sock, "[UID]"+newData[2:-1]);
                         else: # if is not data, some trouble happens, so kill them
                             self.socket_list.remove(sock);
                     except:
                         pass;
-                    
-                    
+
+
 
     def main_loop(self):
         RECV_BUFFER = 1024;
@@ -151,8 +140,8 @@ class Server_UESCOIN:
                     # broken socket, remove it
                     if socket in self.socket_list:
                         self.socket_list.remove(socket);
- 
- 
+
+
 def main():
     title = "           _______  _______  _______  _______ _________ _       \n"\
             " |\     /|(  ____ \(  ____ \(  ____ \(  ___  )\__   __/( (    /|\n"\
