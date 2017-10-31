@@ -1,0 +1,2 @@
+720d98da75044fc9986a88fab0757281 | 1509456399 | 10 | peer2 | peer1 | 40 | 30 | pendente
+724655a27df646cf99454fe5c558a8ff | 1509456406 | 40 | peer2 | peer1 | 0 | 70 | pendente

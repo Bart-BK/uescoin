@@ -6,14 +6,10 @@ class Transaction(object):
         self.tid = 0;
         self.value = 0;
         self.time = 0;
-        self.giver = Peer(); # Verificate if is right
-        self.receiver = Peer(); # Verificate if is right
-        self.balanceGiver = 0;
-        self.balanceReceiver = 0;
+        self.giver = None;
+        self.receiver = None;
 
-        self.status = 'pendente';
-
-    def getTid(self):
+     def getTid(self):
         # Return the self tid
         return self.tid;
 
@@ -32,18 +28,6 @@ class Transaction(object):
     def getReceiver(self):
         # Return the self receiver
         return self.receiver;
-
-    def getBalanceGiver(self):
-        # Return the self balance of giver
-        return self.balanceGiver;
-
-    def getBalanceReceiver(self):
-        # Return the self balance of receiver
-        return self.balanceReceiver;
-
-    def getStatus(self):
-
-        return self.status;
 
     def setTid(self, TId):
         # Set the Tid
@@ -65,30 +49,15 @@ class Transaction(object):
         # Set the Receiver
         self.receiver = receiver;
 
-    def setBalanceGiver(self, balanceGiver):
-        # Set the self balance of giver
-        self.balanceGiver = balanceGiver;
+    def Ack(self, tid):
+        if isMine(tid):
+            addAcks(peer);
+            if allAcks():
+                return ("Commit("+self.tid+")");
 
-    def setBalanceReceiver(self, balanceReceiver):
-        # Set the self balance of receiver
-        self.balanceReceiver = balanceReceiver;
+        else:
+            return("Ack("+tid+")");
 
-    def setStatus(self, status):
+    def isMine(self, tid):
+        return True if tid == self.tid else False;
 
-        self.status = status;
-
-    ''' Fazer analise se e necessario '''
-    def initTempTable(self, tempFile):
-        open(tempFile, 'w+');
-        # Header of txt
-        tabelaTransacao.writelines("tid | data | valor | cedente | receptor | saldoCedente | saldoReceptor");
-        # Close txt
-        tabelaTransacao.close();
-
-    def insertTempTable(self, tempFile):
-        # Create txt
-        tabelaTransacao = open(tempFile, 'a');
-        # Header of txt
-        tabelaTransacao.writelines(self.getTid+" | "+self.getTime+" | "+self.getValue+" | "+self.getGiver+" | "+self.getReceiver+" | "+self.getBalanceGiver+" | "+self.getBalanceReceiver);
-        # Close txt
-        tabelaTransacao.close();

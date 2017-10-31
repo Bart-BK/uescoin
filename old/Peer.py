@@ -20,9 +20,6 @@ class Peer(object):
         # Return the self balance
         return self.balance;
     '''
-    def setId(self, id):
-        # Set the id
-        self.id = id;
 
     def setPrivateKey(self, privateKey):
         # Set the private key
