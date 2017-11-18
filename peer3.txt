@@ -1,3 +1,0 @@
-fb338daa67d946e49fda3e42468372bd | 1509456420 | 110 | peer3 | peer3 | 30 | 140 | pendente
-05df2dd0a7824a369766f2965c67e380 | 1509456442 | -40 | peer3 | peer1 | 30 | 30 | pendente
-11d1af7e822c4e00a93deb30c5074dd2 | 1509456456 | 2000 | peer3 | peer4 | 30 | 2000 | pendente

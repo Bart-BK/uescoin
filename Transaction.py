@@ -1,63 +1,55 @@
-class Transaction(object):
-    """This is the Transaction object"""
+import pickle
 
-    def __init__(self):
-        # Init the object
-        self.tid = 0;
-        self.value = 0;
-        self.time = 0;
-        self.giver = None;
-        self.receiver = None;
+class Peer:
+	def __init__(self):
+		self.id = None
+		self.balance = None
+		self.privateKey = None
 
-     def getTid(self):
-        # Return the self tid
-        return self.tid;
+	@staticmethod
+	def find(filePath, id):
+		fin = open(filePath, 'rb')
+		tx_dict = pickle.load(fin)
+		fin.close()
+		for k, tx in tx_dict.items():
+			if tx.giver.id == id:
+				return tx.giver
+			if tx.receiver.id == id:
+				return tx.receiver
 
-    def getValue(self):
-        # Return the self value
-        return self.value;
+class Transaction:
+	def __init__(self):
+		self.id = None
+		self.time = None
+		self.value = None
+		self.giver = None
+		self.receiver = None
 
-    def getTime(self):
-        # Return the self time
-        return self.time;
+	@staticmethod
+	def find(filePath, id):
+		fin = open(filePath, 'rb')
+		tx_dict = pickle.load(fin)
+		return tx_dict[id]
 
-    def getGiver(self):
-        # Return the self giver
-        return self.giver;
+	@staticmethod
+	def save(filePath, tx):
+		fin = open(filePath, 'rb')
+		tx_dict = pickle.load(fin)
+		tx_dict[tx.id] = tx
+		fin.close()
+		fout = open(filePath, 'wb')
+		pickle.dump(tx_dict, fout)
+		fout.close()
 
-    def getReceiver(self):
-        # Return the self receiver
-        return self.receiver;
+	@staticmethod
+	def remove(filePath, tx):
+		pass
 
-    def setTid(self, TId):
-        # Set the Tid
-        self.tid = TId;
-
-    def setValue(self, value):
-        # Set the Value
-        self.value = value;
-
-    def setTime(self, time):
-        # Set the Time
-        self.time = time;
-
-    def setGiver(self, giver):
-        # Set the Giver
-        self.giver = giver;
-
-    def setReceiver(self, receiver):
-        # Set the Receiver
-        self.receiver = receiver;
-
-    def Ack(self, tid):
-        if isMine(tid):
-            addAcks(peer);
-            if allAcks():
-                return ("Commit("+self.tid+")");
-
-        else:
-            return("Ack("+tid+")");
-
-    def isMine(self, tid):
-        return True if tid == self.tid else False;
-
+def addAck(filePath, tid, pid, status):
+	fin = open(filePath, 'rb')
+	ack_dict = pickle.load(fin)
+	fin.close()
+	ack_dict[tid] = pid, status
+	fout = open(filePath, 'wb')
+	pickle.dump(ack_dict, fout)
+	return len(ack_dict)
