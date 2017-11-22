@@ -4,7 +4,10 @@ import time
 import genesis
 import pickle
 
-objOut = pickle.dumps(('transaction', uuid.uuid4().int, time.time(), 10, 0, 1, 0))
+"""
+	Enviando uma transacao
+"""
+objOut = pickle.dumps(('transaction', uuid.uuid4().int, time.time(), 10, 0, 1, 0)) #Serializando
 tcp = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 tcp.connect(('127.0.0.1', 5555))
 tcp.send(objOut)

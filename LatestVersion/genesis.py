@@ -1,10 +1,22 @@
-import defs
-import pickle
-import transaction
-import uuid
-import time
+import defs #Importa meu arquivo de Definicoes
+import pickle #Serializar os Objetos
+import transaction #Importa Meu Tansaction
+import uuid #Chave
+import time #Tempo
+
+'''
+	Transacao genesis é a trancacao que inicia a economia da moeda, gerando o balanco para as trancacoes futuras
+'''
+
 
 # Transaction 1
+'''
+	Coloca a primeira unidade monetaria no peer zero:
+		Criando o primeio peer que vai servir como fonte inicial e setando seus valores: ID, Saldo e sua chave privada
+		Agora que o primeiro peer está criado, o recebedor inicial é setado como sendo ninguem
+		É realizada a trancacao dados o Peer e o Receiver
+'''
+
 giver1 = transaction.Peer()
 giver1.id = 0
 giver1.balance = 100
@@ -23,6 +35,10 @@ tx1.giver = giver1
 tx1.receiver = receiver1
 
 #Transaction 2
+'''
+	Coloca a primeira unidade monetaria no peer zero:
+		Similar a trancacao 1
+'''
 giver2 = transaction.Peer()
 giver2.id = 0
 giver2.balance = 50
@@ -40,6 +56,10 @@ tx2.value = 50
 tx2.giver = giver2
 tx2.receiver = receiver2
 
+
+'''
+	Agora é nescessario Commitar para gravar no arquivo para validar diretamente a transacao genesis
+'''
 fout = open(defs.TX_COMMIT, 'wb')
 pickle.dump({tx1.id: tx1, tx2.id: tx2}, fout)
 fout.close()
