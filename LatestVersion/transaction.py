@@ -9,7 +9,8 @@ class TransactionDispatcher(Dispatcher):
 	'''
 		Construtor: Recebe quem está aguardando a mensagem
 	'''
-	def __init__(self):
+	def __init__(self, listener):
+		#super(self, TransactionDispatcher).__init__(listener)
 		self.isMine = False
 
 	'''
@@ -115,7 +116,7 @@ class Transaction:
 
 	@staticmethod
 	def save(filePath, tx):
-		finout = open(filePath, 'rb')
+		finout = open(filePath, 'rb+')
 		txDict = pickle.load(finout)
 		txDict[tx.id] = tx
 		pickle.dump(txDict, finout)

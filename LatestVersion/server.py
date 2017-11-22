@@ -2,7 +2,6 @@ import socket #Conectar 2 peers
 import pickle #Serializar
 import defs #Definicoes
 
-
 """
 	Classe Dispatcher
 		Responsavel para encaminhar as mensagem recebidas para a conexao
@@ -12,7 +11,8 @@ class Dispatcher:
 		Construtor: Recebe quem está aguardando a mensagem
 	'''
 	def __init__(self, listener):
-		self.listener = listener
+		#self.listener = listener
+		pass
 
 
 	'''
@@ -21,11 +21,11 @@ class Dispatcher:
 	def incoming(self, conn):
 		self.conn = conn #Conexao
 		params = pickle.loads(conn.recv(4096)) #Deserializar a conexao
-		try:
-			getattr(self, params[0])(*params[1:]) #Tenta realizar uma chamada com reflexao
-		except (TypeError, AttributeError) as e: #Erro
-			print('Protocol error. %s: %s' % (type(e).__name__, e))
-			conn.send('Protocol error'.encode('UTF-8'))
+		#try:
+		getattr(self, params[0])(*params[1:]) #Tenta realizar uma chamada com reflexao
+		#except (TypeError, AttributeError) as e: #Erro
+			#print('Protocol error. %s: %s' % (type(e).__name__, e))
+			#conn.send('Protocol error'.encode('UTF-8'))
 
 	'''
 		DISPACTCH: Responsavel por enviar uma resposta
@@ -33,7 +33,7 @@ class Dispatcher:
 	def dispatch(self, *protocol):
 		self.conn.send(pickle.dumps(protocol))
 		self.conn.close()
-		self.listener.removeClient(self.conn)
+		#self.listener.removeClient(self.conn)
 
 
 
