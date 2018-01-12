@@ -1,4 +1,6 @@
 # Local network config
+import threading
+
 NET_LOCAL = {
 	'HOST':		'172.17.1.23',
 	'PORT':		5555,
@@ -27,3 +29,7 @@ ACKS_TO_APPROVE = PEERS_COUNT
 
 # Peer ID
 WHO_I_AM = 2
+
+LOCK = threading.Lock()
+
+

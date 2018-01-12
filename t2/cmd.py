@@ -15,6 +15,7 @@ def printAcks(filePath):
 def printPeers(filePath):
     peers = openDic(filePath)
     print('ID', 'BALANCE', 'PRIVATE KEY', sep = ' | ')
+    
     for p in peers.values():
         print(p.id, p.balance, p.privateKey, sep = ' | ')
 

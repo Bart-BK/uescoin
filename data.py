@@ -1,6 +1,9 @@
+from globl import *
 import pickle
 import os.path
 from collections import Counter
+
+global Lock
 
 class Peer:
 	def __init__(self):
@@ -63,28 +66,33 @@ def initData(filePath, data):
 		print(filePath, 'founD')
 
 def find(filePath, id):
-	with open(filePath, 'rb') as fin:
-		dic = pickle.load(fin)
-		return dic.get(id, None)
+	LOCK.acquire()
+	fin = open(filePath, 'rb')
+	dic = pickle.load(fin)
+	fin.close()
+	LOCK.release()
+	return dic.get(id, None)
 
 def save(filePath, obj):
-	with open(filePath, 'rb') as fin:
-		dic = pickle.load(fin)
+    LOCK.acquire()
+    with open(filePath, 'rb') as fin:
+    	dic = pickle.load(fin)
 
-	dic[obj.id] = obj
+    dic[obj.id] = obj
 
-	with open(filePath, 'wb') as fout:
-		pickle.dump(dic, fout)
+    with open(filePath, 'wb') as fout:
+    	pickle.dump(dic, fout)
+    LOCK.release()
 
 def remove(filePath, id):
-	with open(filePath, 'rb') as fin:
-		dic = pickle.load(fin)
-
+	LOCK.acquire()
+	fin = open(filePath, 'rb')
+	dic = pickle.load(fin)
 	obj = dic.pop(id, None)
-
-	with open(filePath, 'wb') as fout:
-		pickle.dump(dic, fout)
-		return obj
+	fout = open(filePath, 'wb')
+	pickle.dump(dic, fout)
+	LOCK.release()
+	return obj
 
 def checkPeerKey(peer, privateKey):
 	return peer.id == privateKey

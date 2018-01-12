@@ -1,7 +1,6 @@
 #!/usr/bin/env python3
 
 from globl import NET_LOCAL
-from globl import WHO_I_AM
 from network import ServerListener
 from blockchain import TransactionDispatcher
 import init

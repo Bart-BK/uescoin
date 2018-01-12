@@ -32,7 +32,7 @@ class TransactionDispatcher(Dispatcher):
 		if giverId == WHO_I_AM:
 			save(PATH['TX_MINE'], tx)
 
-		if checkPeerKey(giver, privateKey) and giver.balance - value >= 0:
+		if checkPeerKey(giver, privateKey) and giver.balance >= 0.0:
 			# Transaction has been approved
 			# Persists transaction on temporary file
 			save(PATH['TX_TEMP'], tx)

@@ -41,5 +41,3 @@ def init():
 	initData(PATH['PEERS'], peers)
 	# Acknowledgements
 	initData(PATH['ACKS'], {})
-
-	print('')
